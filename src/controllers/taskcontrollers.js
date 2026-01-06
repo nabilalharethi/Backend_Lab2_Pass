@@ -32,3 +32,29 @@ const getTaskById = async (req, res) => {
         res.status(500).json({ error: 'Internal server error', details: error.message });
     } 
 };
+
+// Create a new task
+
+const createTask = async (req, res) => {
+    try {
+        const { title, description } = req.body;
+
+        if(!title) {
+            return res.status(400).json({ error: 'Title is required', details: 'Please provide a title for the task' });
+        }
+
+        const userId = req.body.userId || 1; // Default to user ID 1 for now
+
+        const [result] = await pool.query(
+            'INSERT INTO tasks (title, description, status, user_id) VALUES (?, ?, ?, ?)',
+            [title, description || null, status || 'pending', userId]
+        );
+
+        const newTask = await pool.query('SELECT * FROM tasks WHERE id = ?', [result.insertId]);
+
+        res.status(201).json(newTask[0]);
+    } catch (error) {
+        console.error('Error creating task:', error);
+        res.status(500).json({ error: 'Internal server error', details: error.message });
+    }
+};
