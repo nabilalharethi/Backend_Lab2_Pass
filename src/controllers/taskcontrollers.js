@@ -58,3 +58,28 @@ const createTask = async (req, res) => {
         res.status(500).json({ error: 'Internal server error', details: error.message });
     }
 };
+
+//update tasks
+
+
+const updateTask = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, description, status } = req.body;
+
+        const [existingTask] = await pool.query('SELECT * FROM tasks WHERE id = ?', [id]);
+        if (existingTask.length === 0) {
+            return res.status(404).json({ error: 'Task not found', details: `No task found with id ${id}` });
+        }
+        await pool.query(
+            'UPDATE tasks SET title = ?, description = ?, status = ? WHERE id = ?',
+            [title || existingTask[0].title, description || existingTask[0].description, status || existingTask[0].status, id]
+        );
+
+        const [updatedTask] = await pool.query('SELECT * FROM tasks WHERE id = ?', [id]);
+        res.status(200).json(updatedTask[0]);
+    } catch (error) {
+        console.error('Error updating task:', error);
+        res.status(500).json({ error: 'Internal server error', details: error.message });
+    }
+};
