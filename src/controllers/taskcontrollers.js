@@ -83,3 +83,27 @@ const updateTask = async (req, res) => {
         res.status(500).json({ error: 'Internal server error', details: error.message });
     }
 };
+
+// Delete task
+const deleteTask = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [existingTask] = await pool.query('SELECT * FROM tasks WHERE id = ?', [id]);
+        if (existingTask.length === 0) {
+            return res.status(404).json({ error: 'Task not found', details: `No task found with id ${id}` });
+        }
+        await pool.query('DELETE FROM tasks WHERE id = ?', [id]);
+        res.status(200).json({ message: 'Task deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting task:', error);
+        res.status(500).json({ error: 'Internal server error', details: error.message });
+    }   
+};
+
+module.exports = {
+    getAllTasks,
+    getTaskById,
+    createTask,
+    updateTask,
+    deleteTask
+};
