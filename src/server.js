@@ -1,7 +1,7 @@
 //main
 
 const express = require('express');
-const {testConnection} = require('./config/database');
+const {testConnection} = require('./config/databse');
 const taskRoutes = require('./routes/taskRoutes');
 const { version } = require('react');
 require('dotenv').config();
