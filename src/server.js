@@ -11,23 +11,24 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware to parse JSON requests
 app.use(express.json());
-
 //prase URL-encoded requests
 app.use(express.urlencoded({ extended: true }));
+
+
 
 //requist logging middleware
 app.use((req, res, next) => {
     const timestamp = new Date().toISOString();
-    console.log(`[${timestamp}] ${req.method} ${req.url}`);
+    console.log(`[${timestamp}] ${req.method} ${req.path}`);
     next();
 });
 
 //api routes
-app.use('/api', taskRoutes);
+app.use('/api/tasks', taskRoutes);
 
 //root endpoint
 app.get('/', (req, res) => {
-    res.json({ message: 'Welcome to the Task Management API', version: '1.0.0', endpoints : {'Get/tasks': 'Retrieve all tasks', 'Get/tasks/:id': 'Retrieve a specific task by ID', 'Post/tasks': 'Create a new task', 'Put/tasks/:id': 'Update an existing task by ID', 'Delete/tasks/:id': 'Delete a task by ID'} });
+    res.json({ message: 'Welcome to the Task Management API', version: '1.0.0', endpoints : {'Get/api/tasks': 'Retrieve all tasks', 'Get/api/tasks/:id': 'Retrieve a specific task by ID', 'Post/api/tasks': 'Create a new task', 'Put/api/tasks/:id': 'Update an existing task by ID', 'Delete/api/tasks/:id': 'Delete a task by ID'} });
 });
 
 //404 handler

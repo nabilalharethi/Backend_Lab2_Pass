@@ -37,7 +37,7 @@ const getTaskById = async (req, res) => {
 
 const createTask = async (req, res) => {
     try {
-        const { title, description } = req.body;
+        const { title, description, status } = req.body;
 
         if(!title) {
             return res.status(400).json({ error: 'Title is required', details: 'Please provide a title for the task' });
